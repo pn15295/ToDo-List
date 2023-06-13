@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <main class="">
     <h1 class="text-3xl font-bold">Tobi's ToDo List</h1>
 
     <!-- Abschnitt zum Hinzufügen einer Aufgabe -->
@@ -40,7 +40,7 @@
       </ul>
       <Button variant="cta" @click="reopenTask">Reopen</Button>
     </div>
-  </div>
+  </main>
 </template>
 
 <script>
