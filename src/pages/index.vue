@@ -1,105 +1,103 @@
 <template>
   <main>
-    <div class="flex justify-center">
+    <div class="flex justify-center pb-10">
       <h1 class="text-3xl font-bold">Tobi's ToDo List</h1>
     </div>
 
-    <div class="px-96 py-10">
-      <div class="flex flex-col bg-gray-200 rounded-lg py-5">
+    <div class="flex justify-center pb-10">
+      <div class="flex flex-col w-4/5 md:w-1/2 bg-gray-200 rounded-lg py-5">
         <div class="flex justify-center">
           <!-- Abschnitt zum Hinzufügen einer Aufgabe -->
           <p class="text-2xl font-bold">Add task</p>
         </div>
 
-        <div>
-          <div class="flex flex-col w-full px-48 py-5">
-            <FormalTextInput
-              v-model="description"
-              type="text"
-              label="description"
-              class="pb-5"
-            />
-            <NativeDatepicker v-model="enddate" id="enddate" label="enddate" />
-          </div>
-          <div class="flex justify-center">
-            <Button class="bg-blue-700" @click="saveData">Save</Button>
-            <ThemeColors />
-          </div>
+        <div class="flex flex-col w-4/5 mx-auto py-5">
+          <FormalTextInput
+            v-model="description"
+            type="text"
+            label="description"
+            class="pb-5"
+          />
+          <NativeDatepicker v-model="enddate" id="enddate" label="enddate" />
+        </div>
+
+        <div class="flex justify-center">
+          <Button class="bg-blue-700" @click="saveData">Save</Button>
+          <ThemeColors />
         </div>
       </div>
     </div>
 
-    <div class="grid grid-cols-2">
-      <div class="px-24 py-10">
-        <div class="flex flex-col bg-gray-200 rounded-lg py-5">
-          <!-- Abschnitt mit den aktiven Aufgaben -->
-          <div class="flex justify-center">
-            <p class="text-2xl font-bold">Tasks</p>
-          </div>
+    <div class="flex flex-col md:flex-row md:justify-evenly">
+      <div
+        class="flex flex-col mx-auto md:mx-0 w-4/5 md:w-2/5 bg-gray-200 rounded-lg py-5 mb-5 md:mb-0"
+      >
+        <!-- Abschnitt mit den aktiven Aufgaben -->
+        <div class="flex justify-center">
+          <p class="text-2xl font-bold">Tasks</p>
+        </div>
 
-          <div class="flex justify-center px-10">
-            <ul class="py-3">
-              <li
-                class="flex gap-2 py-1 items-center"
-                v-for="data in dataArray"
-                :key="data.id"
+        <div class="flex justify-center px-10">
+          <ul class="py-3">
+            <li
+              class="flex gap-2 py-1 items-center"
+              v-for="data in dataArray"
+              :key="data.id"
+            >
+              <input type="checkbox" :id="'checkbox-' + data.id" />
+              <label
+                class="grid grid-cols-4 gap-5 w-full"
+                :for="'checkbox-' + data.id"
               >
-                <input type="checkbox" :id="'checkbox-' + data.id" />
-                <label
-                  class="grid grid-cols-4 gap-5 w-full"
-                  :for="'checkbox-' + data.id"
+                <span class="col-span-3"
+                  >Description: {{ data.description }}</span
                 >
-                  <span class="col-span-3"
-                    >Description: {{ data.description }}</span
-                  >
-                  <span>Enddate: {{ data.enddate }}</span>
-                </label>
-              </li>
-            </ul>
-          </div>
-
-          <div class="flex justify-center gap-2">
-            <Button class="bg-green-700" @click="doneTask">Done</Button>
-            <Button class="bg-red-700" @click="deleteTask">Delete</Button>
-          </div>
+                <span>Enddate: {{ data.enddate }}</span>
+              </label>
+            </li>
+          </ul>
+        </div>
+        <div class="flex justify-center gap-2">
+          <Button class="bg-green-700" @click="doneTask">Done</Button>
+          <Button class="bg-red-700" @click="deleteTask">Delete</Button>
         </div>
       </div>
 
-      <div class="px-24 py-10">
-        <div class="flex flex-col bg-gray-200 rounded-lg py-5">
-          <div class="flex justify-center">
-            <!-- Abschnitt mit den erledigten Aufgaben -->
-            <p class="text-2xl font-bold">Done tasks</p>
-          </div>
+      <div
+        class="flex flex-col mx-auto md:mx-0 w-4/5 md:w-2/5 bg-gray-200 rounded-lg py-5 pb-5"
+      >
+        <div class="flex justify-center">
+          <!-- Abschnitt mit den erledigten Aufgaben -->
+          <p class="text-2xl font-bold">Done tasks</p>
+        </div>
 
-          <div class="flex justify-center px-10">
-            <ul class="py-3">
-              <li
-                class="flex gap-2 py-1 items-center"
-                v-for="done in doneArray"
-                :key="done.id"
+        <div class="flex justify-center px-10">
+          <ul class="py-3">
+            <li
+              class="flex gap-2 py-1 items-center"
+              v-for="done in doneArray"
+              :key="done.id"
+            >
+              <input
+                type="checkbox"
+                :id="'checkbox-' + done.id"
+                :checked="true"
+              />
+              <label
+                class="grid grid-cols-4 gap-5 w-full"
+                :for="'checkbox-' + done.id"
               >
-                <input
-                  type="checkbox"
-                  :id="'checkbox-' + done.id"
-                  :checked="true"
-                />
-                <label
-                  class="grid grid-cols-4 gap-5 w-full"
-                  :for="'checkbox-' + done.id"
+                <span class="col-span-3"
+                  >Description: {{ done.description }}</span
                 >
-                  <span class="col-span-3"
-                    >Description: {{ done.description }}</span
-                  >
-                  <span>Enddate: {{ done.enddate }}</span>
-                </label>
-              </li>
-            </ul>
-          </div>
+                <span>Enddate: {{ done.enddate }}</span>
+              </label>
+            </li>
+          </ul>
+        </div>
 
-          <div class="flex justify-center">
-            <Button class="bg-gray-500" @click="reopenTask">Reopen</Button>
-          </div>
+        <div class="flex justify-center">
+          <Button class="bg-gray-500" @click="reopenTask">Reopen</Button>
         </div>
       </div>
     </div>
