@@ -1,44 +1,107 @@
 <template>
-  <main class="">
-    <h1 class="text-3xl font-bold">Tobi's ToDo List</h1>
-
-    <!-- Abschnitt zum Hinzufügen einer Aufgabe -->
-    <div>
-      <p class="text-2xl font-bold">Add task</p>
-      <FormalTextInput v-model="description" type="text" label="description" />
-      <NativeDatepicker v-model="enddate" id="enddate" label="enddate" />
-      <Button variant="cta" @click="saveData">Save</Button>
-      <ThemeColors />
+  <main>
+    <div class="flex justify-center">
+      <h1 class="text-3xl font-bold">Tobi's ToDo List</h1>
     </div>
 
-    <!-- Abschnitt mit den aktiven Aufgaben -->
-    <div>
-      <p class="text-2xl font-bold">Tasks</p>
-      <ul>
-        <li v-for="data in dataArray" :key="data.id">
-          <input type="checkbox" :id="'checkbox-' + data.id" />
-          <label :for="'checkbox-' + data.id">
-            <span>Description: {{ data.description }}</span>
-            <span>Enddate: {{ data.enddate }}</span>
-          </label>
-        </li>
-      </ul>
-      <Button variant="cta" @click="doneTask">Done</Button>
+    <div class="px-96 py-10">
+      <div class="flex flex-col bg-gray-200 rounded-lg py-5">
+        <div class="flex justify-center">
+          <!-- Abschnitt zum Hinzufügen einer Aufgabe -->
+          <p class="text-2xl font-bold">Add task</p>
+        </div>
+
+        <div>
+          <div class="flex flex-col w-full px-48 py-5">
+            <FormalTextInput
+              v-model="description"
+              type="text"
+              label="description"
+              class="pb-5"
+            />
+            <NativeDatepicker v-model="enddate" id="enddate" label="enddate" />
+          </div>
+          <div class="flex justify-center">
+            <Button class="bg-blue-700" @click="saveData">Save</Button>
+            <ThemeColors />
+          </div>
+        </div>
+      </div>
     </div>
 
-    <!-- Abschnitt mit den erledigten Aufgaben -->
-    <div>
-      <p class="text-2xl font-bold">Done tasks</p>
-      <ul>
-        <li v-for="done in doneArray" :key="done.id">
-          <input type="checkbox" :id="'checkbox-' + done.id" :checked="true" />
-          <label :for="'checkbox-' + done.id">
-            <span>Description: {{ done.description }}</span>
-            <span>Enddate: {{ done.enddate }}</span>
-          </label>
-        </li>
-      </ul>
-      <Button variant="cta" @click="reopenTask">Reopen</Button>
+    <div class="grid grid-cols-2">
+      <div class="px-24 py-10">
+        <div class="flex flex-col bg-gray-200 rounded-lg py-5">
+          <!-- Abschnitt mit den aktiven Aufgaben -->
+          <div class="flex justify-center">
+            <p class="text-2xl font-bold">Tasks</p>
+          </div>
+
+          <div class="flex justify-center px-10">
+            <ul class="py-3">
+              <li
+                class="flex gap-2 py-1 items-center"
+                v-for="data in dataArray"
+                :key="data.id"
+              >
+                <input type="checkbox" :id="'checkbox-' + data.id" />
+                <label
+                  class="grid grid-cols-4 gap-5 w-full"
+                  :for="'checkbox-' + data.id"
+                >
+                  <span class="col-span-3"
+                    >Description: {{ data.description }}</span
+                  >
+                  <span>Enddate: {{ data.enddate }}</span>
+                </label>
+              </li>
+            </ul>
+          </div>
+
+          <div class="flex justify-center gap-2">
+            <Button class="bg-green-700" @click="doneTask">Done</Button>
+            <Button class="bg-red-700" @click="deleteTask">Delete</Button>
+          </div>
+        </div>
+      </div>
+
+      <div class="px-24 py-10">
+        <div class="flex flex-col bg-gray-200 rounded-lg py-5">
+          <div class="flex justify-center">
+            <!-- Abschnitt mit den erledigten Aufgaben -->
+            <p class="text-2xl font-bold">Done tasks</p>
+          </div>
+
+          <div class="flex justify-center px-10">
+            <ul class="py-3">
+              <li
+                class="flex gap-2 py-1 items-center"
+                v-for="done in doneArray"
+                :key="done.id"
+              >
+                <input
+                  type="checkbox"
+                  :id="'checkbox-' + done.id"
+                  :checked="true"
+                />
+                <label
+                  class="grid grid-cols-4 gap-5 w-full"
+                  :for="'checkbox-' + done.id"
+                >
+                  <span class="col-span-3"
+                    >Description: {{ done.description }}</span
+                  >
+                  <span>Enddate: {{ done.enddate }}</span>
+                </label>
+              </li>
+            </ul>
+          </div>
+
+          <div class="flex justify-center">
+            <Button class="bg-gray-500" @click="reopenTask">Reopen</Button>
+          </div>
+        </div>
+      </div>
     </div>
   </main>
 </template>
@@ -110,6 +173,18 @@ export default {
       // Erledigte Aufgaben aus doneArray entfernen
       this.doneArray = this.doneArray.filter((task) => {
         return this.checkCheckbox(task.id);
+      });
+    },
+
+    deleteTask() {
+      // Erledigte Aufgaben filtern
+      const checkedTasks = this.dataArray.filter((task) => {
+        return this.checkCheckbox(task.id);
+      });
+
+      // Erledigte Aufgaben aus dataArray entfernen
+      this.dataArray = this.dataArray.filter((task) => {
+        return !this.checkCheckbox(task.id);
       });
     },
   },
