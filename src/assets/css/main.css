@@ -1,4 +1,4 @@
-@import 'webcc-ui-components/dist/esm/bundle.css';
+@import "webcc-ui-components/dist/esm/bundle.css";
 
 @tailwind base;
 @tailwind components;
