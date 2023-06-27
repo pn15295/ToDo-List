@@ -14,31 +14,33 @@ export const getters = {
 };
 
 export const mutations = {
-  addTask(state, task) {
-    state.dataArray.push(task);
+  addTasks(state, tasks) {
+    state.dataArray.push(...tasks);
+    localStorage.setItem("Tasks", JSON.stringify(state.dataArray));
   },
 
   removeTasks(state, tasksToRemove) {
     state.dataArray = state.dataArray.filter((task) => {
       return !tasksToRemove.some((removedTask) => removedTask.id === task.id);
     });
+    localStorage.setItem("Tasks", JSON.stringify(state.dataArray));
   },
 
-  setTasks(state, dataArray) {
-    state.dataArray = dataArray;
+  reopenTasks(state, tasks) {
+    state.dataArray.push(...tasks);
+    localStorage.setItem("Tasks", JSON.stringify(state.dataArray));
   },
 
-  addDoneTasks(state, task) {
-    state.doneArray = [...state.doneArray, task]; //gleich wie state.doneArray = doneArray, einfach, dass man sagen kann ob der Eintrag am Anfang oder am Ende sein soll (vor oder nach ...)
+  addDoneTasks(state, tasks) {
+    state.doneArray = tasks;
+    localStorage.setItem("DoneTasks", JSON.stringify(state.doneArray));
+    //state.doneArray = [...state.doneArray, ...tasks]; //gleich wie state.doneArray = doneArray, einfach, dass man sagen kann ob der Eintrag am Anfang oder am Ende sein soll (vor oder nach ...)
   },
 
   removeDoneTasks(state, tasksToRemove) {
     state.doneArray = state.doneArray.filter((task) => {
       return !tasksToRemove.some((removedTask) => removedTask.id === task.id);
     });
-  },
-
-  setDoneTasks(state, doneArray) {
-    state.doneArray = doneArray;
+    localStorage.setItem("DoneTasks", JSON.stringify(state.doneArray));
   },
 };

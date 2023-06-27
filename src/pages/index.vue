@@ -24,6 +24,13 @@
 
       <doneTask :doneArray="doneArray" @reopen="reopenTask" />
     </div>
+
+    <div class="flex justify-center pt-10">
+      <Button class="bg-green-500" @click="$fetch">Cat Fact</Button>
+    </div>
+    <div class="flex justify-center">
+      <h2  class="text-lg">{{ catOutput }}</h2>
+    </div>
   </main>
 </template>
 
@@ -44,6 +51,27 @@ export default {
     addTask,
     manageTask,
     doneTask,
+  },
+  data() {
+    return {
+      catOutput: null,
+    };
+  },
+  async fetch() {
+    const url = "https://catfact.ninja/fact?max_length=200";
+
+    const response = await fetch(url);
+    const result = await response.json();
+    console.log(result);
+    this.catOutput = result.fact;
+  },
+
+  beforeMount() {
+    const dataArray = JSON.parse(localStorage.getItem("Tasks")) || [];
+    this.$store.commit("tasks/addTasks", dataArray);
+
+    const doneArray = JSON.parse(localStorage.getItem("DoneTasks")) || [];
+    this.$store.commit("tasks/addDoneTasks", doneArray);
   },
   computed: {
     dataArray() {
@@ -68,40 +96,24 @@ export default {
 
     // Fügt die neue Aufgabe dem dataArray hinzu (Aufgaben hinzufügen / speichern)
     saveTask(newTask) {
-      this.$store.commit("tasks/addTask", newTask);
-      // window.localStorage.setItem("dataArray", JSON.stringify(this.dataArray));
+      this.$store.commit("tasks/addTasks", [newTask]);
     },
 
     // Verschiebt die markierten Aufgaben vom dataArray zum doneArray (Aufgaben als erledigt markieren)
     doneTask(checkedTasks) {
-      /*this.dataArray = this.dataArray.filter((task) => {
-        return !checkedTasks.some((checkedTask) => checkedTask.id === task.id);
-      });*/
       this.$store.commit("tasks/removeTasks", checkedTasks);
       this.$store.commit("tasks/addDoneTasks", checkedTasks);
-      /*window.localStorage.setItem("doneArray", JSON.stringify(this.doneArray));
-      window.localStorage.setItem("dataArray", JSON.stringify(this.dataArray));*/
     },
 
     // Entfernt die markierten Aufgaben aus dem dataArray (Aufgaben löschen)
     deleteTask(checkedTasks) {
-      // this.dataArray = this.dataArray.filter((task) => {
-      //   return !checkedTasks.some((checkedTask) => checkedTask.id === task.id);
-      // });
       this.$store.commit("tasks/removeTasks", checkedTasks);
-      //window.localStorage.setItem("dataArray", JSON.stringify(this.dataArray));
     },
 
     // Fügt die nicht markierten Aufgaben dem dataArray hinzu und entfernt sie aus dem doneArray (Aufgaben wieder öffnen)
     reopenTask(uncheckedTasks) {
-      // this.dataArray.push(...uncheckedTasks);
-      // this.doneArray = this.doneArray.filter((task) => {
-      //   return this.checkCheckbox(task.id);
-      // });
-      this.$store.commit("tasks/addTask", uncheckedTasks);
-      this.$store.commit("tasks/removeDoneTasks", this.doneArray);
-      /* window.localStorage.setItem("doneArray", JSON.stringify(this.doneArray));
-      window.localStorage.setItem("dataArray", JSON.stringify(this.dataArray));*/
+      this.$store.commit("tasks/reopenTasks", uncheckedTasks);
+      this.$store.commit("tasks/removeDoneTasks", uncheckedTasks);
     },
   },
 };
