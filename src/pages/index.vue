@@ -26,10 +26,10 @@
     </div>
 
     <div class="flex justify-center pt-10">
-      <Button class="bg-green-500" @click="$fetch">Cat Fact</Button>
+      <Button class="bg-green-500" @click="fetch">Cat Fact</Button>
     </div>
     <div class="flex justify-center">
-      <h2  class="text-lg">{{ catOutput }}</h2>
+      <h2 class="text-lg">{{ catOutput }}</h2>
     </div>
   </main>
 </template>
@@ -57,14 +57,6 @@ export default {
       catOutput: null,
     };
   },
-  async fetch() {
-    const url = "https://catfact.ninja/fact?max_length=200";
-
-    const response = await fetch(url);
-    const result = await response.json();
-    console.log(result);
-    this.catOutput = result.fact;
-  },
 
   beforeMount() {
     const dataArray = JSON.parse(localStorage.getItem("Tasks")) || [];
@@ -82,6 +74,15 @@ export default {
     },
   },
   methods: {
+    async fetch() {
+      const url = "https://catfact.ninja/fact?max_length=200";
+
+      const response = await fetch(url);
+      const result = await response.json();
+      console.log(result);
+      this.catOutput = result.fact;
+    },
+
     // Generiert eine eindeutige ID basierend auf dem aktuellen Zeitstempel
     generateUniqueId() {
       return Date.now();

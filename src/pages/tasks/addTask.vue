@@ -24,6 +24,7 @@
 <script>
 import { Button, FormalTextInput, NativeDatepicker } from "webcc-ui-components";
 import ThemeColors from "../../components/themeColors/ThemeColors.vue";
+import axios from "axios";
 
 export default {
   components: {
@@ -43,7 +44,31 @@ export default {
       return Date.now(); // Beispiel für eine zeistempel-basierte ID
     },
 
-    saveData() {
+    async saveData() {
+      try {
+        const response = await fetch('/api/tasks', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }).then((res) => res.json())
+        //const response = await axios.post("/api/tasks");
+        //const response = await this.$todo.$post('/api/tasks');
+        const result = await response.data;
+        const newTask = {
+          id: this.generateUniqueId(),
+          description: result.description,
+          enddate: result.enddate,
+        };
+        this.$emit("save", newTask); // Ereignis auslösen und die Daten übergeben
+        this.description = "";
+        this.enddate = "";
+      } catch (error) {
+        console.error(error);
+      }
+    },
+
+    /*saveData() {
       const newTask = {
         id: this.generateUniqueId(),
         description: this.description,
@@ -52,7 +77,7 @@ export default {
       this.$emit("save", newTask); // Ereignis auslösen und die Daten übergeben
       this.description = "";
       this.enddate = "";
-    },
+    },*/
   },
 };
 </script>

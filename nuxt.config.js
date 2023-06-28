@@ -20,16 +20,23 @@ export default {
   css: ["./src/assets/css/main.css"],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [],
+  plugins: [{ src: "./plugins/axios.js", mode: "client" }],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
+
+  serverMiddleware: [
+    {
+      path: "/api",
+      handler: "./src/api/index.js",
+    },
+  ],
 
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: ["@nuxtjs/tailwindcss"],
 
   // Modules: https://go.nuxtjs.dev/config-modules
-  modules: ["portal-vue/nuxt"],
+  modules: ["portal-vue/nuxt", "@nuxtjs/axios"],
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
@@ -46,5 +53,9 @@ export default {
     cssPath: "./src/assets/css/main.css",
     configPath: "tailwind.config.js",
     exposeConfig: true,
+  },
+
+  axios: {
+    proxy: true,
   },
 };
