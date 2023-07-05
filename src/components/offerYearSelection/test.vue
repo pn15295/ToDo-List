@@ -18,20 +18,20 @@
     </div>
 
     <div class="grid gap-4" :class="columns[cols]">
-      <FormalCheckbox
+      <label
         v-for="(option, index) in preparedOptions"
-        v-model="optionData[option.value]"
-        :disabled="isCheckboxDisabled(index)"
-        :id="`${id}-${option.value}`"
-        :invalid="invalid"
         :key="option.value"
-        :label="option.label"
-        :value="option.value"
-        :valid="valid"
+        class="flex items-center"
       >
-        <div slot="valid"></div>
-        <div slot="invalid"></div>
-      </FormalCheckbox>
+        <input
+          type="checkbox"
+          :id="`${id}-${option.value}`"
+          :value="option.value"
+          v-model="optionData[option.value]"
+          :disabled="isCheckboxDisabled(index)"
+        />
+        <span>{{ option.label }}</span>
+      </label>
     </div>
 
     <!-- Error Message -->
@@ -44,61 +44,50 @@
 </template>
 
 <script>
-import { FormalCheckbox, Icon } from "webcc-ui-components";
+import { Icon } from "webcc-ui-components";
 
 export default {
   name: "OfferYearSelection",
   components: {
     Icon,
-    FormalCheckbox,
   },
   props: {
-    // Anzahl der Spalten für das Rasterlayout
     cols: {
       type: Number,
       default: 5,
     },
-    // Deaktiviert den gesamten Bereich
     disabled: {
       type: Boolean,
       default: false,
     },
-    // Fehlermeldungstext
     errorMessage: {
       type: String,
       default: undefined,
     },
-    // Eindeutige ID für das div-Element
     id: {
       type: String,
       required: true,
     },
-    // Gibt an, ob das Feld ungültig ist
     invalid: {
       type: Boolean,
       default: false,
     },
-    // Titeltext
     title: {
       type: String,
       default: undefined,
     },
-    // Optionen für die Checkboxen
     options: {
       type: Array,
       default: () => [],
     },
-    // Typ der Checkbox (hier standardmäßig "checkbox")
     type: {
       type: String,
       default: "checkbox",
     },
-    // Gibt an, ob das Feld gültig ist
     valid: {
       type: Boolean,
       default: false,
     },
-    // Der Wert der Checkboxen (über v-model gebunden)
     value: {
       type: Object,
       required: true,
@@ -106,12 +95,10 @@ export default {
   },
   data() {
     return {
-      // Interne Daten für die Optionen der Checkboxen
       optionData: this.value,
     };
   },
   computed: {
-    // Klassen für die Spalten des Rasterlayouts
     columns() {
       return {
         0: "lg:grid-cols-none",
@@ -129,7 +116,6 @@ export default {
         12: "lg:grid-cols-12",
       };
     },
-    // Klassen für die Fehlermeldung
     errorClasses() {
       return {
         "absolute left-1 text-err-text leading-tight": true,
@@ -137,37 +123,24 @@ export default {
         "text-xs": this.compact,
       };
     },
-    // Vorbereitete Optionen für die Checkboxen
-    preparedOptions() {
-      return this.options.map((option) => {
-        return {
-          ...option,
-          disabled: false,
-        };
-      });
-    },
-    // Klassen für die Validierungs-Icons
     validationClasses() {
       return {
-        "absolute right-4 top-0 w-7 h-7 pointer-events-none": true,
+        "w-4 h-4 ml-2": true,
         "text-suc": this.valid,
         "text-err": this.invalid,
       };
     },
+    
   },
   watch: {
-    // Überwacht Änderungen des Wertes der Checkboxen
     value(newValue) {
       this.optionData = newValue;
     },
-    // Überwacht Änderungen der optionData
     optionData(newOptionData) {
-      // Sendet den geänderten Wert über das "input"-Event
       this.$emit("input", newOptionData);
     },
   },
   methods: {
-    // Überprüft, ob die Checkbox deaktiviert sein soll
     isCheckboxDisabled(index) {
       const optionKeys = Object.keys(this.optionData);
       const checkedKeys = optionKeys.filter((key) => this.optionData[key]);
@@ -182,7 +155,6 @@ export default {
         const checkboxValue = this.preparedOptions[index].value;
 
         if (disabled) {
-          // Setzt den Wert der deaktivierten Checkbox auf true
           this.$set(this.optionData, checkboxValue, true);
         }
 
@@ -193,3 +165,9 @@ export default {
   },
 };
 </script>
+
+<style>
+.label-warning {
+  color: #ff9800;
+}
+</style>

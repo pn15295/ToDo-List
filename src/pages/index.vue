@@ -28,8 +28,8 @@ export default {
         first: false,
         second: false,
         third: false,
-        /*fourth: false,
-        fifth: false,*/
+        fourth: false,
+        fifth: false,
       },
     };
   },
@@ -39,8 +39,8 @@ export default {
         { label: "first", value: "first" },
         { label: "second", value: "second" },
         { label: "third", value: "third" },
-        /*{ label: "fourth", value: "fourth" },
-        { label: "fifth", value: "fifth" },*/
+        { label: "fourth", value: "fourth" },
+        { label: "fifth", value: "fifth" },
       ];
     },
   },
